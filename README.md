@@ -44,9 +44,15 @@ $ cp server/config/environment/development.js.template server/config/environment
 
 # Install dependencies
 $ npm install && bower install
+$ npm install -g generator-angular-fullstack
 
 # Start server
-grunt serve
+$ grunt serve
+
+# Install new endpoint
+$ yo angular-fullstack:endpoint <new endpoint>
+# Install new Angular Route
+$ yo angular-fullstack:route <new route>
 
 ```
 
