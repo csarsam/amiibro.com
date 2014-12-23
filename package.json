@@ -1,6 +1,6 @@
 {
-  "name": "amiibolocatorcom",
-  "version": "0.0.0",
+  "name": "amiibro.com",
+  "version": "0.0.1",
   "main": "server/app.js",
   "dependencies": {
     "async": "^0.9.0",
@@ -59,7 +59,6 @@
     "grunt-open": "~0.2.3",
     "open": "~0.0.4",
     "jshint-stylish": "~0.1.5",
-    "connect-livereload": "~0.4.0",
     "karma-ng-scenario": "~0.1.0",
     "karma-firefox-launcher": "~0.1.3",
     "karma-script-launcher": "~0.1.0",
