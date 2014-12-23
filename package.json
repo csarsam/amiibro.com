@@ -4,6 +4,7 @@
   "main": "server/app.js",
   "dependencies": {
     "async": "^0.9.0",
+    "aws2": "^0.1.5",
     "body-parser": "~1.5.0",
     "cheerio": "^0.18.0",
     "composable-middleware": "^0.3.0",
@@ -21,7 +22,8 @@
     "querystring": "^0.2.0",
     "request": "^2.51.0",
     "serve-favicon": "~2.0.1",
-    "validator": "^3.26.0"
+    "validator": "^3.26.0",
+    "xml2json": "^0.5.1"
   },
   "devDependencies": {
     "grunt": "~0.4.4",

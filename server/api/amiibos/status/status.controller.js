@@ -79,6 +79,15 @@ exports.index = function(req, res) {
         amiiboResp['target'] = targetData;
         return callback();
       });
+    } else if(store === 'amazon') {
+      availability.amazon(amiibo[store], zip, radius, function (error, amazonData) {
+        if(error) {
+          console.log(error);
+          return callback('Could not get status of Amazon data.');
+        }
+        amiiboResp['amazon'] = amazonData;
+        return callback();
+      });
     } else {
       return callback();
     }

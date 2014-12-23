@@ -4,6 +4,8 @@ var request = require('request');
 var qs = require('querystring');
 var url = require('url');
 var cheerio = require('cheerio');
+var aws2 = require('aws2');
+var parser = require('xml2json');
 var config = require('../config/environment');
 
 function _parseWalmartBody(body, callback) {
@@ -185,6 +187,40 @@ function _parseTargetBody(storeBody, itemBody, callback) {
     mobileUrl: null
   };
   return callback(null, {stores: newStores, item: newItem});
+}
+
+function _parseAmazonBody(body, callback) {
+  if(!body['ItemLookupResponse']['Items']['Request']['IsValid']) {
+    return callback(null, {items: null, stores: null});
+  }
+  var item = body['ItemLookupResponse']['Items']['Item'];
+  var newItem = {
+    id: item['ASIN'],
+    name: item['ItemAttributes']['Title'],
+    upc: item['UPC'],
+    image: item['LargeImage']['URL'],
+    shipToStore: null,
+    freeToShipToStore: null,
+    availableOnline: item['Offers']['TotalOffers'] > 0 ? true : false,
+    productUrl: item['DetailPageURL'],
+    addToCartUrl: null,
+    mobileUrl: null
+  };
+  var stores = [{
+    name: 'Amazon.com',
+    address: null,
+    address2: null,
+    city: null,
+    state: null,
+    zip: null,
+    phone: null,
+    hours: null,
+    gmtOffset: null,
+    inStoreAvailability: item['Offers']['TotalOffers'] > 0 ? true : false,
+    inStoreAvailabilityUpdateDate: null,
+    miles: null
+  }];
+  return callback(null, {item: newItem, stores: stores});
 }
 
 // https://api.walmartlabs.com/v1/items?ids=41488612,41488614,41488611,41488613,40571997,41488608,41488610,41488609,40571996&apiKey=<MY API KEY>
@@ -400,6 +436,53 @@ exports.target = function (amiibo, zip, radius, callback) {
         }
         return callback(null, resp);
       });
+    });
+  });
+};
+
+// https://webservices.amazon.com/onca/xml?Service=AWSECommerceService&Operation=ItemLookup&ItemId=<ASIN>&MerchantId=Amazon&ResponseGroup=Large&AssociateTag=foobar
+exports.amazon = function (amiibo, zip, radius, callback) {
+  var urlObject = url.parse('https://webservices.amazon.com');
+  var baseUrl = urlObject.href;
+  var id = amiibo.asin;
+  if(id === null) {
+    return callback(null, {});
+  }
+  var path = '/onca/xml';
+  var parameters = qs.stringify({
+    Service: 'AWSECommerceService',
+    Operation: 'ItemLookup',
+    ItemId: id,
+    MerchantId: 'Amazon',
+    ResponseGroup: 'Large',
+    AssociateTag: 'sp34hi34mafaf-20'
+  });
+  var options = {
+    host: urlObject.host,
+    path: path + '?' + parameters
+  };
+  aws2.sign(options, {
+    accessKeyId: config.amazon.accessKeyId,
+    secretAccessKey: config.amazon.secretAccessKey
+  });
+  request.get(baseUrl + options.path, {
+    headers: {
+      'Accept': 'application/xml'
+    }
+  }, function (error, resp, body) {
+    if(error) {
+      return callback(error);
+    }
+    body = parser.toJson(body);
+    body = JSON.parse(body);
+    if(resp.statusCode !== 200) {
+      return callback(body);
+    }
+    _parseAmazonBody(body, function (error, resp) {
+      if(error) {
+        return callback(error);
+      }
+      return callback(null, resp);
     });
   });
 };
