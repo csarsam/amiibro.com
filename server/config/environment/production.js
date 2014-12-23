@@ -20,5 +20,9 @@ module.exports = {
   },
   bestbuy: {
     apiKey: process.env.AMIIBRO_BESTBUY_APIKEY || ''
+  },
+  amazon: {
+    accessKeyId : process.env.AMIIBRO_AMAZON_ACCESS_KEY_ID || '',
+    secretAccessKey: process.env.AMIIBRO_AMAZON_SECRET_ACCESS_KEY || ''
   }
 };
