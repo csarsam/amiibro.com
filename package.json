@@ -1,6 +1,7 @@
 {
   "name": "amiibro.com",
   "version": "0.0.1",
+  "author": "Adam Schodde <sparky1010+github@gmail.com>",
   "main": "server/app.js",
   "dependencies": {
     "async": "^0.9.0",
