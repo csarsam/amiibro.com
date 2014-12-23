@@ -38,12 +38,14 @@ function _parseBestBuyBody(body, callback) {
       address2: null,
       city: store.city,
       state: store.region,
-      zipcode: store.fullPostalCode,
+      zipcode: store.postalCode,
       country: store.country,
+      phone: store.phone,
       hours: store.hoursAmPm,
       gmtOffset: store.gmtOffset,
       inStoreAvailability: store.products[0].inStoreAvailability,
-      inStoreAvailabilityUpdateDate: store.products[0].inStoreAvailabilityUpdateDate
+      inStoreAvailabilityUpdateDate: store.products[0].inStoreAvailabilityUpdateDate,
+      miles: store.distance
     };
     resp.stores.push(newStore);
   }
@@ -97,7 +99,8 @@ function _parseGamestopBody(body, callback) {
         address2: $(this).find('span[id*="Address2Label"]').text() ? $(this).find('span[id*="Address2Label"]').text() : null,
         city: $(this).find('span[id*="CityLabel"]').text(),
         state: $(this).find('span[id*="StateLabel"]').text(),
-        zip: $(this).find('span[id*="ZipLabel"]').text(),
+        zipcode: $(this).find('span[id*="ZipLabel"]').text(),
+        country: "US",
         phone: $(this).find('span[id*="PhoneLabel"]').text(),
         hours: null,
         gmtOffset: null,
@@ -140,7 +143,8 @@ function _parseToysRUs(body, callback) {
       address2: null,
       city: addrObj[1],
       state: addrObj[2].split(' ')[0],
-      zip: addrObj[2].split(' ')[1],
+      zipcode: addrObj[2].split(' ')[1],
+      country: "US",
       phone: $(this).find('td.location span.storePhone strong').text(),
       hours: hours,
       gmtOffset: null,
@@ -159,11 +163,12 @@ function _parseTargetBody(storeBody, itemBody, callback) {
     var store = storeBody.products[0].stores[i];
     var addrObj = store.formatted_store_address.split(', ');
     var newStore = {
-      name: store.name,
+      name: store.store_name,
       address: addrObj[0],
       city: addrObj[1],
       state: addrObj[2],
-      zip: addrObj[3],
+      zipcode: addrObj[3],
+      country: "US",
       phone: store.store_main_phone,
       hours: null,
       gmtOffset: null,
@@ -212,7 +217,8 @@ function _parseAmazonBody(body, callback) {
     address2: null,
     city: null,
     state: null,
-    zip: null,
+    zipcode: null,
+    country: null,
     phone: null,
     hours: null,
     gmtOffset: null,
@@ -384,7 +390,7 @@ exports.target = function (amiibo, zip, radius, callback) {
     return callback(null, {});
   }
   var parameters = qs.stringify({
-    key: 'eb2551e4accc14f38cc42d32fbc2b2ea'
+    key: config.target.apiKey
   });
   var URL = baseUrl + '?' + parameters;
   request.post(URL, {

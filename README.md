@@ -23,6 +23,9 @@ Requirements
 * [NodeJS](http://nodejs.org/)
 * [Grunt](http://gruntjs.com/)
 * [Yeoman](http://yeoman.io/)
+* [Walmart Developer Account](https://developer.walmartlabs.com/)
+* [Bestbuy Developer Account](https://developer.bestbuy.com/)
+* [Amazon AWS Account](http://aws.amazon.com/)
 
 Development
 ------------------

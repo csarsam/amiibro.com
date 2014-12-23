@@ -14,7 +14,7 @@ exports.index = function(req, res) {
   var radius = req.param('radius');
   var region = req.param('region');
   if(validator.isNull(name)) {
-    return res.status(400).jsonp({message: 'Missing name.', names: Object.keys(amiibos)});
+    return res.status(400).jsonp({message: 'Missing Amiibo name.', names: Object.keys(amiibos)});
   }
   if(validator.isNull(zip)) {
     return res.status(400).jsonp({message: 'Missing zipcode.'});
@@ -27,6 +27,9 @@ exports.index = function(req, res) {
   }
   if(!validator.isName(name)) {
     return res.status(400).jsonp({message: 'Invalid Amiibo name.', names: Object.keys(amiibos)})
+  }
+  if(!validator.isZipcode(zip, 'US')) {
+    return res.status(400).jsonp({message: 'Invalid zipcode, must be 5 digits and a US zipcode.'});
   }
   var amiibo = amiibos[name];
   var storeNames = Object.keys(amiibo).filter(function (n) {
@@ -105,4 +108,14 @@ validator.extend('isName', function (str) {
     return true;
   }
   return false;
+});
+
+validator.extend('isZipcode', function (str, type) {
+  switch(type) {
+    case 'US':
+    var usRegex = new RegExp(/^\d{5}$/);
+    return usRegex.test(str);
+    default:
+    return false;
+  }
 });

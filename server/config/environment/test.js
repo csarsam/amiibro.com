@@ -12,6 +12,9 @@ module.exports = {
   bestbuy: {
     apiKey: 'testKey'
   },
+  target: {
+    apiKey: 'testKey'
+  },
   amazon: {
     accessKeyId : 'testKey',
     secretAccessKey: 'testKey'
