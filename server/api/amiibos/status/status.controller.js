@@ -14,7 +14,7 @@ exports.index = function(req, res) {
   var radius = req.param('radius');
   var region = req.param('region');
   if(validator.isNull(name)) {
-    return res.status(400).jsonp({message: 'Missing name.'});
+    return res.status(400).jsonp({message: 'Missing name.', names: Object.keys(amiibos)});
   }
   if(validator.isNull(zip)) {
     return res.status(400).jsonp({message: 'Missing zipcode.'});
@@ -59,6 +59,24 @@ exports.index = function(req, res) {
           return callback('Could not get status of Gamestop data.');
         }
         amiiboResp['gamestop'] = gamestopData;
+        return callback();
+      });
+    } else if(store === 'toysrus') {
+      availability.toysrus(amiibo[store], zip, radius, function (error, toysrusData) {
+        if(error) {
+          console.log(error);
+          return callback('Could not get status of Toys-R-Us data.');
+        }
+        amiiboResp['toysrus'] = toysrusData;
+        return callback();
+      });
+    } else if(store === 'target') {
+      availability.target(amiibo[store], zip, radius, function (error, targetData) {
+        if(error) {
+          console.log(error);
+          return callback('Could not get status of Target data.');
+        }
+        amiiboResp['target'] = targetData;
         return callback();
       });
     } else {

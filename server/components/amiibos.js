@@ -25,6 +25,7 @@ module.exports = {
       online: 40571988
     },
     toysrus: {
+      skuId: 19472202,
       sku: 'C50CA165',
       productId: 46105416
     }
@@ -53,6 +54,7 @@ module.exports = {
       online: 40571993
     },
     toysrus: {
+      skuId: 19472223,
       sku: 'E2180C89',
       productId: 46105436
     }
@@ -81,6 +83,7 @@ module.exports = {
       online: 40571994
     },
     toysrus: {
+      skuId: 19472330,
       sku: '55BCD704',
       productId: 46105466
     }
@@ -109,6 +112,7 @@ module.exports = {
       online: 40571984
     },
     toysrus: {
+      skuId: 19472374,
       sku: '9E1AB79F',
       productId: 46105506
     }
@@ -137,6 +141,7 @@ module.exports = {
       online: 40571985
     },
     toysrus: {
+      skuId: 19472351,
       sku: '7F6B53E1',
       productId: 46105486
     }
@@ -165,6 +170,7 @@ module.exports = {
       online: 40571992
     },
     toysrus: {
+      skuId: 19472263,
       sku: '102EB4FE',
       productId: 46105456
     }
@@ -193,6 +199,7 @@ module.exports = {
       online: 40571995
     },
     toysrus: {
+      skuId: 19472191,
       sku: 'B8CF0CEC',
       productId: 46105406
     }
@@ -221,6 +228,7 @@ module.exports = {
       online: null
     },
     toysrus: {
+      skuId: null,
       sku: null,
       productId: null
     }
@@ -249,6 +257,7 @@ module.exports = {
       online: null
     },
     toysrus: {
+      skuId: null,
       sku: '9AEA32D2',
       productId: 46105496
     }
@@ -277,6 +286,7 @@ module.exports = {
       online: 40572001
     },
     toysrus: {
+      skuId: 19472172,
       sku: 'A3E11EFA',
       productId: 46105396
     }
@@ -305,6 +315,7 @@ module.exports = {
       online: 40571986
     },
     toysrus: {
+      skuId: 19472231,
       sku: 'FA5A1F6B',
       productId: 46105446
     }
@@ -333,6 +344,7 @@ module.exports = {
       online: null
     },
     toysrus: {
+      skuId: null,
       sku: null,
       productId: null
     }
@@ -361,6 +373,7 @@ module.exports = {
       online: 40571997
     },
     toysrus: {
+      skuId: 19948538,
       sku: '735DBC9A',
       productId: 52097886
     }
@@ -389,6 +402,7 @@ module.exports = {
       online: null
     },
     toysrus: {
+      skuId: 19948458,
       sku: 'CE2357ED',
       productId: 52097846
     }
@@ -417,6 +431,7 @@ module.exports = {
       online: 40571998
     },
     toysrus: {
+      skuId: 19948555,
       sku: '946FB0E1',
       productId: 52097896
     }
@@ -445,6 +460,7 @@ module.exports = {
       online: null
     },
     toysrus: {
+      skuId: 19948481,
       sku: '0DFB5AA0',
       productId: 52097866
     }
@@ -473,6 +489,7 @@ module.exports = {
       online: 40571999
     },
     toysrus: {
+      skuId: null,
       sku: null,
       productId: null
     }
@@ -501,6 +518,7 @@ module.exports = {
       online: 40571991
     },
     toysrus: {
+      skuId: null,
       sku: null,
       productId: null
     }
@@ -529,6 +547,7 @@ module.exports = {
       online: null
     },
     toysrus: {
+      skuId: null,
       sku: null,
       productId: null
     }
@@ -557,6 +576,7 @@ module.exports = {
       online: 41488609
     },
     toysrus: {
+      skuId: null,
       sku: null,
       productId: null
     }
@@ -585,6 +605,7 @@ module.exports = {
       online: null
     },
     toysrus: {
+      skuId: null,
       sku: null,
       productId: null
     }
@@ -613,6 +634,7 @@ module.exports = {
       online: 41488610
     },
     toysrus: {
+      skuId: null,
       sku: null,
       productId: null
     }
@@ -641,6 +663,7 @@ module.exports = {
       online: 41488608
     },
     toysrus: {
+      skuId: null,
       sku: null,
       productId: null
     }
@@ -669,6 +692,7 @@ module.exports = {
       online: 41488614
     },
     toysrus: {
+      skuId: null,
       sku: null,
       productId: null
     }
@@ -697,6 +721,7 @@ module.exports = {
       online: 41488612
     },
     toysrus: {
+      skuId: null,
       sku: null,
       productId: null
     }
@@ -725,6 +750,7 @@ module.exports = {
       online: null
     },
     toysrus: {
+      skuId: null,
       sku: null,
       productId: null
     }
@@ -753,6 +779,7 @@ module.exports = {
       online: 41488611
     },
     toysrus: {
+      skuId: null,
       sku: null,
       productId: null
     }
@@ -781,6 +808,7 @@ module.exports = {
       online: 41488613
     },
     toysrus: {
+      skuId: null,
       sku: null,
       productId: null
     }
@@ -809,6 +837,7 @@ module.exports = {
       online: null
     },
     toysrus: {
+      skuId: null,
       sku: null,
       productId: null
     }

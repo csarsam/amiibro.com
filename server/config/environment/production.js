@@ -12,12 +12,13 @@ module.exports = {
   port:     process.env.OPENSHIFT_NODEJS_PORT ||
             process.env.PORT ||
             8080,
-
-  // MongoDB connection options
-  mongo: {
-    uri:    process.env.MONGOLAB_URI ||
-            process.env.MONGOHQ_URL ||
-            process.env.OPENSHIFT_MONGODB_DB_URL+process.env.OPENSHIFT_APP_NAME ||
-            'mongodb://localhost/amiibolocatorcom'
+  session: {
+    secret: process.env.AMIIBRO_SESSION_SECRET || 'lkdjlfksjflksjdlfkjsdljfsljsldjflsdkjflskdjlfksjdflskjlskdjflj'
+  },
+  walmart: {
+    apiKey: process.env.AMIIBRO_WALMART_APIKEY || ''
+  },
+  bestbuy: {
+    apiKey: process.env.AMIIBRO_BESTBUY_APIKEY || ''
   }
 };

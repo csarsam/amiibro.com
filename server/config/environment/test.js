@@ -3,8 +3,13 @@
 // Test specific configuration
 // ===========================
 module.exports = {
-  // MongoDB connection options
-  mongo: {
-    uri: 'mongodb://localhost/amiibolocatorcom-test'
+  session: {
+    secret: 'testSession'
+  },
+  walmart: {
+    apiKey: 'testKey'
+  },
+  bestbuy: {
+    apiKey: 'testKey'
   }
 };
