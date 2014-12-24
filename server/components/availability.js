@@ -50,7 +50,7 @@ function _parseBestBuyBody(body, callback) {
     resp.stores.push(newStore);
   }
   if(stores.length === 0) {
-    return callback(null, {items: null, stores: null});
+    return callback(null, {item: null, stores: null});
   }
   var item = stores[0].products[0];
   resp.item = {
@@ -78,7 +78,7 @@ function _parseGamestopBody(body, callback) {
   });
   var noResultsDivLength = $('div').children('div#no_stores_near_zip').children().length;
   if(noResultsDivLength > 0) {
-    return callback(null, {items: null, stores: null});
+    return callback(null, {item: null, stores: null});
   } else {
     var results = body.split('|')[7];
     results = results.trim().replace(/(\n\r|\n|\r)/gm, '').replace(/\t/g," ").replace(/\s+/g, ' ');
@@ -197,7 +197,7 @@ function _parseTargetBody(storeBody, itemBody, callback) {
 
 function _parseAmazonBody(body, callback) {
   if(!body['ItemLookupResponse']['Items']['Request']['IsValid']) {
-    return callback(null, {items: null, stores: null});
+    return callback(null, {item: null, stores: null});
   }
   var item = body['ItemLookupResponse']['Items']['Item'];
   var newItem = {
@@ -249,7 +249,7 @@ exports.walmart = function (amiibo, callback) {
     }
     if(resp.statusCode !== 200) {
       console.log(body);
-      return callback(null, {items: null, stores: null});
+      return callback(null, {item: null, stores: null});
     }
     body = JSON.parse(body);
     _parseWalmartBody(body, function (error, resp) {
@@ -281,7 +281,7 @@ exports.bestbuy = function (amiibo, zip, radius, callback) {
     }
     if(resp.statusCode !== 200) {
       console.log(body);
-      return callback(null, {items: null, stores: null});
+      return callback(null, {item: null, stores: null});
     }
     body = JSON.parse(body);
     if(body.totalPages > 1) {
@@ -328,7 +328,7 @@ exports.gamestop = function (amiibo, zip, callback) {
     }
     if(resp.statusCode !== 200) {
       console.log(body);
-      return callback(null, {items: null, stores: null});
+      return callback(null, {item: null, stores: null});
     }
     _parseGamestopBody(body, function (error, resp) {
       if(error) {
@@ -373,7 +373,7 @@ exports.toysrus = function (amiibo, zip, radius, callback) {
     }
     if(resp.statusCode !== 200) {
       console.log(body);
-      return callback(null, {items: null, stores: null});
+      return callback(null, {item: null, stores: null});
     }
     _parseToysRUs(body, function (error, resp) {
       if(error) {
@@ -434,7 +434,7 @@ exports.target = function (amiibo, zip, radius, callback) {
       }
       if(resp.statusCode !== 200) {
         console.log(itemBody);
-        return callback(null, {items: null, stores: null});
+        return callback(null, {item: null, stores: null});
       }
       itemBody = JSON.parse(itemBody);
       _parseTargetBody(storeBody, itemBody, function (error, resp) {
