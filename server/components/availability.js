@@ -165,6 +165,7 @@ function _parseTargetBody(storeBody, itemBody, callback) {
     var newStore = {
       name: store.store_name,
       address: addrObj[0],
+      address2: null,
       city: addrObj[1],
       state: addrObj[2],
       zipcode: addrObj[3],
