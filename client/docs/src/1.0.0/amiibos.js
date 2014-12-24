@@ -57,7 +57,7 @@
 * @apiSuccess (200 Success) {String} retailers.gamestop.stores.address2 The second part of the address of the Gamestop store.
 * @apiSuccess (200 Success) {String} retailers.gamestop.stores.city The city of the Gamestop store.
 * @apiSuccess (200 Success) {String} retailers.gamestop.stores.state The state of the Gamestop store.
-* @apiSuccess (200 Success) {String} retailers.gamestop.stores.zip The zipcode of the Gamestop store.
+* @apiSuccess (200 Success) {String} retailers.gamestop.stores.zipcode The zipcode of the Gamestop store.
 * @apiSuccess (200 Success) {String} retailers.gamestop.stores.country The country of the Gamestop store, will always be US for Gamestop.
 * @apiSuccess (200 Success) {String} retailers.gamestop.stores.phone The phone number of the Gamestop store.
 * @apiSuccess (200 Success) {String} retailers.gamestop.stores.hours The posted hours of the Gamestop store, will always be null for Gamestop.
@@ -73,7 +73,7 @@
 * @apiSuccess (200 Success) {String} retailers.target.stores.address2 The second part of the address of the Target store.
 * @apiSuccess (200 Success) {String} retailers.target.stores.city The city of the Target store.
 * @apiSuccess (200 Success) {String} retailers.target.stores.state The state of the Target store.
-* @apiSuccess (200 Success) {String} retailers.target.stores.zip The zipcode of the Target store.
+* @apiSuccess (200 Success) {String} retailers.target.stores.zipcode The zipcode of the Target store.
 * @apiSuccess (200 Success) {String} retailers.target.stores.country The country of the Target store, will always be US for Target.
 * @apiSuccess (200 Success) {String} retailers.target.stores.phone The phone number of the Target store.
 * @apiSuccess (200 Success) {String} retailers.target.stores.hours The posted hours of the Target store, will always be null for Target.
@@ -99,7 +99,7 @@
 * @apiSuccess (200 Success) {String} retailers.bestbuy.stores.address2 The second part of the address of the Bestbuy store, will always be null for Bestbuy.
 * @apiSuccess (200 Success) {String} retailers.bestbuy.stores.city The city of the Bestbuy store.
 * @apiSuccess (200 Success) {String} retailers.bestbuy.stores.state The state of the Bestbuy store.
-* @apiSuccess (200 Success) {String} retailers.bestbuy.stores.zip The zipcode of the Bestbuy store.
+* @apiSuccess (200 Success) {String} retailers.bestbuy.stores.zipcode The zipcode of the Bestbuy store.
 * @apiSuccess (200 Success) {String} retailers.bestbuy.stores.country The country of the Bestbuy store, will always be US for Bestbuy.
 * @apiSuccess (200 Success) {String} retailers.bestbuy.stores.phone The phone number of the Bestbuy store.
 * @apiSuccess (200 Success) {String} retailers.bestbuy.stores.hours The posted hours of the Bestbuy store.
@@ -125,7 +125,7 @@
 * @apiSuccess (200 Success) {String} retailers.amazon.stores.address2 The second part of the address of the Amazon store, will always be null for Amazon.
 * @apiSuccess (200 Success) {String} retailers.amazon.stores.city The city of the Amazon store, will always be null for Amazon.
 * @apiSuccess (200 Success) {String} retailers.amazon.stores.state The state of the Amazon store, will always be null for Amazon.
-* @apiSuccess (200 Success) {String} retailers.amazon.stores.zip The zipcode of the Amazon store, will always be null for Amazon.
+* @apiSuccess (200 Success) {String} retailers.amazon.stores.zipcode The zipcode of the Amazon store, will always be null for Amazon.
 * @apiSuccess (200 Success) {String} retailers.amazon.stores.country The country of the Amazon store, will always be null for Amazon.
 * @apiSuccess (200 Success) {String} retailers.amazon.stores.phone The phone number of the Amazon store, will always be null for Amazon.
 * @apiSuccess (200 Success) {String} retailers.amazon.stores.hours The posted hours of the Amazon store, will always be null for Amazon.
@@ -164,7 +164,7 @@
 * @apiSuccess (200 Success) {String} retailers.toysrus.stores.address2 The second part of the address of the ToysRUs store, will always be null for ToysRUs.
 * @apiSuccess (200 Success) {String} retailers.toysrus.stores.city The city of the ToysRUs store.
 * @apiSuccess (200 Success) {String} retailers.toysrus.stores.state The state of the ToysRUs store.
-* @apiSuccess (200 Success) {String} retailers.toysrus.stores.zip The zipcode of the ToysRUs store.
+* @apiSuccess (200 Success) {String} retailers.toysrus.stores.zipcode The zipcode of the ToysRUs store.
 * @apiSuccess (200 Success) {String} retailers.toysrus.stores.country The country of the ToysRUs store, will always be US for ToysRUs.
 * @apiSuccess (200 Success) {String} retailers.toysrus.stores.phone The phone number of the ToysRUs store.
 * @apiSuccess (200 Success) {String} retailers.toysrus.stores.hours The posted hours of the ToysRUs store.

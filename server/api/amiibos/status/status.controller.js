@@ -181,8 +181,6 @@ exports.index = function(req, res) {
     if(error) {
       return res.status(500).jsonp({message: error});
     }
-    // client.set(redisKey, JSON.stringify(amiiboResp));
-    // client.expire(redisKey, 60);
     return res.jsonp(amiiboResp);
   });
 };
