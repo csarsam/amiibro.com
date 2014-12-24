@@ -32,6 +32,9 @@ Development
 ------------------
 
 ```bash
+# Start Redis
+$ redis-server /path/to/redis.conf
+
 # Set environment variable temporarily in Linux or Mac or Git Bash on Windows
 $ export NODE_ENV=development
 # Or permanent in your ~/.bashrc or ~/.profile (for Mac OSX)
@@ -75,6 +78,9 @@ $ cd .. && zip -r dist.zip dist/* && scp -P 22 dist.zip username@example.com:/pa
 $ ssh -p 22 username@example.com
 
 # On remote machine:
+
+# Make sure redis is running
+
 $ cd /path/to/production/directory/
 $ unzip dist.zip
 
