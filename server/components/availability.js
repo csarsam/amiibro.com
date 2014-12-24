@@ -203,7 +203,7 @@ function _parseAmazonBody(body, callback) {
   var newItem = {
     id: item['ASIN'],
     name: item['ItemAttributes']['Title'],
-    upc: item['UPC'],
+    upc: item['ItemAttributes']['UPC'],
     image: item['LargeImage']['URL'],
     shipToStore: null,
     freeToShipToStore: null,
