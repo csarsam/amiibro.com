@@ -15,6 +15,9 @@ module.exports = {
   session: {
     secret: process.env.AMIIBRO_SESSION_SECRET || 'lkdjlfksjflksjdlfkjsdljfsljsldjflsdkjflskdjlfksjdflskjlskdjflj'
   },
+  redis: {
+    password: process.env.AMIIBRO_REDIS_PASSWORD || null
+  },
   walmart: {
     apiKey: process.env.AMIIBRO_WALMART_APIKEY || ''
   },

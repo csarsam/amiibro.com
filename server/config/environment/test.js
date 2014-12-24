@@ -6,6 +6,9 @@ module.exports = {
   session: {
     secret: 'testSession'
   },
+  redis: {
+    password: 'myPassword'
+  },
   walmart: {
     apiKey: 'testKey'
   },

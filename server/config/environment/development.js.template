@@ -6,6 +6,9 @@ module.exports = {
   session: {
     secret: '' // 64+ char phrase
   },
+  redis: {
+    password: '' // Redis password, null for no password
+  },
   walmart: {
     apiKey: '' // https://developer.walmartlabs.com/
   },
