@@ -16,6 +16,8 @@ module.exports = {
     secret: process.env.AMIIBRO_SESSION_SECRET || 'lkdjlfksjflksjdlfkjsdljfsljsldjflsdkjflskdjlfksjdflskjlskdjflj'
   },
   redis: {
+    host: process.env.AMIIBRO_REDIS_HOST || '127.0.0.1',
+    port: process.env.AMIIBRO_REDIS_PORT || 6379,
     password: process.env.AMIIBRO_REDIS_PASSWORD || null
   },
   walmart: {

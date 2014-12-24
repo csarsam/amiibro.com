@@ -3,7 +3,7 @@
 var _ = require('lodash');
 var redis = require("redis");
 var config = require('../../../config/environment');
-var client = redis.createClient({
+var client = redis.createClient(config.redis.port, config.redis.host, {
   auth_pass: config.redis.password
 });
 var validator = require('validator');
