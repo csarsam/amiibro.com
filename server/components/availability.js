@@ -173,7 +173,7 @@ function _parseTargetBody(storeBody, itemBody, callback) {
       phone: store.store_main_phone,
       hours: null,
       gmtOffset: null,
-      inStoreAvailability: store.onhand_quantity > 0 ? false : true,
+      inStoreAvailability: store.onhand_quantity > 0 ? true : false,
       inStoreAvailabilityUpdateDate: null,
       miles: store.distance,
     };
