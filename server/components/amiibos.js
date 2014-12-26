@@ -344,9 +344,9 @@ module.exports = {
       online: null
     },
     toysrus: {
-      skuId: null,
-      sku: null,
-      productId: null
+      skuId: 19472219,
+      sku: 'EF5313A3',
+      productId: 46105426
     }
   },
   zelda: {
