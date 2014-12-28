@@ -10,6 +10,7 @@ module.exports = function(app) {
 
   // Insert routes below
   app.use('/api/amiibos', require('./api/amiibos'));
+  app.use('/api/amiibos/images', require('./api/amiibos/images'));
   app.use('/api/amiibos/status', require('./api/amiibos/status'));
 
   // All undefined asset or api routes should return a 404
