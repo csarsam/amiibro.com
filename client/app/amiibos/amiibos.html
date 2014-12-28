@@ -1,0 +1,10 @@
+<div class="container">
+<ul class="grid">
+    <li ng-repeat="amiibo in amiibos" class="amiibo grid-item">
+        <a class="content" href="/amiibo/{{ amiibo.key }}">
+            <div id="amiibo-{{ $index }}" style='background-image: url("{{ amiibo.url }}");'>
+            </div>
+        </a>
+    </li>
+</ul>
+</div>
