@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('amiibolocatorcomApp')
+angular.module('amiiBroApp')
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {

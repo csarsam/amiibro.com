@@ -1,7 +1,6 @@
-.thing-form {
-    margin: 20px 0;
+md-card.amiibo {
+  cursor: pointer;
 }
-
 .footer {
     text-align: center;
     padding: 30px 0;

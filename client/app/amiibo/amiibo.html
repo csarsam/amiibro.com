@@ -1,0 +1,72 @@
+<div layout-gt-sm="row" ng-show="amiibo">
+  <div flex="20">
+    <md-card class="md-whiteframe-z2">
+      <img ng-src="{{amiibo.image}}" class="md-card-image" alt="amiibo.title">
+      <h3>
+        {{amiibo.title}}<sup ng-if="amiibo.hasTrademark" style="font-size: 10pt;">&#8482;</sup><sup ng-if="!amiibo.hasTrademark" style="font-size: 12pt;"></sup>
+      </h3>
+      <p>
+        <form ng-submit="search()">
+          <div class="row">
+            <md-text-float label="Zipcode" type="number" ng-model="zipcode" autofocus></md-text-float>
+            <md-text-float label="Radius" type="number" ng-model="radius" max="100"></md-text-float>
+            <md-button type="submit" class="md-raised md-primary" ng-disabled="searching">Search All</md-button>
+          </div>
+        </form>
+      </p>
+    </md-card>
+  </div>
+  <div flex="80">
+    <div layout-gt-sm="row">
+      <div flex="33" ng-repeat="(index, retailer) in retailers | slice: 0:3">
+        <md-card class="md-whiteframe-z2">
+          <img ng-src="{{retailer.image}}" class="md-card-image" alt="{{retailer.title}} Logo" height="200">
+          <p>
+            <md-button class="md-raised md-primary" ng-click="search()" ng-show="!status &amp;&amp; !searching">Search</md-button>
+            <md-progress-circular class="md-hue-2" md-mode="indeterminate" ng-show="!status &amp;&amp; searching"></md-progress-circular>
+            <md-list ng-if="status">
+              <md-item ng-repeat="store in getStores(retailer.shortname)">
+                <md-item-content>
+                  <div class="md-tile-content">
+                    <h3></h3>
+                    <h4></h4>
+                    <p>
+                      {{store.name}}
+                    </p>
+                  </div>
+                </md-item-content>
+              </md-item>
+            </md-list>
+          </p>
+        </md-card>
+      </div>
+    </div>
+    <div layout-gt-sm="row">
+      <div flex="33" ng-repeat="(index, retailer) in retailers | slice: 3:6">
+        <md-card class="md-whiteframe-z2">
+          <img ng-src="{{retailer.image}}" class="md-card-image" alt="{{retailer.title}} Logo" height="200">
+          <p>
+            <md-button class="md-raised md-primary" ng-click="search()" ng-show="!status &amp;&amp; !searching">Search</md-button>
+            <md-progress-circular class="md-hue-2" md-mode="indeterminate" ng-show="!status &amp;&amp; searching"></md-progress-circular>
+            <md-list ng-if="status">
+              <md-item ng-repeat="store in getStores(retailer.shortname)">
+                <md-item-content>
+                  <div class="md-tile-content">
+                    <h3></h3>
+                    <h4></h4>
+                    <p>
+                      {{store.name}}
+                    </p>
+                  </div>
+                </md-item-content>
+              </md-item>
+            </md-list>
+          </p>
+        </md-card>
+      </div>
+    </div>
+  </div>
+</div>
+<footer class="footer">
+  <p>Amiibro &copy; 2014 | Made with ♥ from  <a href="//github.com/brutalhonesty">@brutalhonesty</a></p>
+</footer>

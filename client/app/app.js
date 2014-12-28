@@ -1,16 +1,15 @@
 'use strict';
 
-angular.module('amiibolocatorcomApp', [
+angular.module('amiiBroApp', [
   'ngCookies',
   'ngResource',
   'ngSanitize',
-  'ngRoute'
-])
-  .config(function ($routeProvider, $locationProvider) {
+  'ngRoute',
+  'ngMaterial'
+]).config(function ($routeProvider, $locationProvider) {
     $routeProvider
-      .otherwise({
-        redirectTo: '/'
-      });
-
+    .otherwise({
+      redirectTo: '/'
+    });
     $locationProvider.html5Mode(true);
-  });
+});
