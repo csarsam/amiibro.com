@@ -1,11 +1,22 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
-<header class="hero-unit" id="banner">
-  <h2>Front End Coming Soon...</h2>
+<header class="logo">
+  <h2 id="banner">♥ Amiibro ♥</h2>
+  <input type=text
+  ng-pattern='/^(\d{5}(-\d{4})?|[A-Z]\d[A-Z] *\d[A-Z]\d)$/'
+  ng-model="zipcode"
+  required>
 </header>
 
-<div class="container">
-
+<div class="container" ng-controller="MainCtrl">
+<ul class="grid">
+    <li ng-repeat="amiibo in amiibos" class="amiibo grid-item">
+        <a class="content" href="/amiibo/{{ amiibo.key }}">
+            <div id="amiibo-{{ $index }}" style='background-image: url("{{ amiibo.url }}");'>
+            </div>
+        </a>
+    </li>
+</ul>
 </div>
 
 <footer class="footer">
