@@ -4,6 +4,8 @@ var request = require('request');
 var qs = require('querystring');
 var url = require('url');
 var cheerio = require('cheerio');
+var aws2 = require('aws2');
+var parser = require('xml2json');
 var config = require('../config/environment');
 
 function _parseWalmartBody(body, callback) {
@@ -20,7 +22,7 @@ function _parseWalmartBody(body, callback) {
     addToCartUrl: item.addToCartUrl,
     mobileUrl: null
   };
-  return callback(null, resp);
+  return callback(null, {item: resp, stores: null});
 }
 
 function _parseBestBuyBody(body, callback) {
@@ -33,16 +35,22 @@ function _parseBestBuyBody(body, callback) {
     newStore = {
       name: store.name,
       address: store.address,
+      address2: null,
       city: store.city,
       state: store.region,
-      zipcode: store.fullPostalCode,
+      zipcode: store.postalCode,
       country: store.country,
+      phone: store.phone,
       hours: store.hoursAmPm,
       gmtOffset: store.gmtOffset,
       inStoreAvailability: store.products[0].inStoreAvailability,
-      inStoreAvailabilityUpdateDate: store.products[0].inStoreAvailabilityUpdateDate
+      inStoreAvailabilityUpdateDate: store.products[0].inStoreAvailabilityUpdateDate,
+      miles: store.distance
     };
     resp.stores.push(newStore);
+  }
+  if(stores.length === 0) {
+    return callback(null, {item: null, stores: null});
   }
   var item = stores[0].products[0];
   resp.item = {
@@ -70,13 +78,156 @@ function _parseGamestopBody(body, callback) {
   });
   var noResultsDivLength = $('div').children('div#no_stores_near_zip').children().length;
   if(noResultsDivLength > 0) {
-    return callback(null, {});
+    return callback(null, {item: null, stores: null});
   } else {
     var results = body.split('|')[7];
     results = results.trim().replace(/(\n\r|\n|\r)/gm, '').replace(/\t/g," ").replace(/\s+/g, ' ');
-    console.log(results);
-    return callback(null, {});
+    $ = cheerio.load(results, {
+      normalizeWhitespace: true,
+      xmlMode: false,
+      decodeEntities: true
+    });
+    var milesArr = [];
+    $('table#searchResults tbody tr th strong span').each(function (index) {
+      milesArr.push($(this).text());
+    });
+    var addresses = [];
+    $('table#searchResults tbody tr td.store_address dl.address').each(function (index) {
+      var address = {
+        name:  $(this).find('span[id*="MallLabel"]').text(),
+        address: $(this).find('span[id*="Address1Label"]').text(),
+        address2: $(this).find('span[id*="Address2Label"]').text() ? $(this).find('span[id*="Address2Label"]').text() : null,
+        city: $(this).find('span[id*="CityLabel"]').text(),
+        state: $(this).find('span[id*="StateLabel"]').text(),
+        zipcode: $(this).find('span[id*="ZipLabel"]').text(),
+        country: "US",
+        phone: $(this).find('span[id*="PhoneLabel"]').text(),
+        hours: null,
+        gmtOffset: null,
+        inStoreAvailability: true,
+        inStoreAvailabilityUpdateDate: null,
+        miles: milesArr[index]
+      };
+      addresses.push(address);
+    });
+    return callback(null, {stores: addresses, item: null});
   }
+}
+
+function _parseToysRUs(body, callback) {
+  var results = body.trim().replace(/(\n\r|\n|\r)/gm, '').replace(/\t/g," ").replace(/\s+/g, ' ');
+  var $ = cheerio.load(results, {
+    normalizeWhitespace: true,
+    xmlMode: false,
+    decodeEntities: true
+  });
+  var addresses = []
+  $('table.locations tbody tr').each(function (index) {
+    var availabilityText = $(this).find('td.instock span').text();
+    var availability = null;
+    if(availabilityText === 'unavailable') {
+      availability = false;
+    }
+    if(availabilityText === 'in-stock') {
+      availability = true;
+    }
+    var addrObj = $(this).find('td.location span.storeAddress').text().trim().split(', ');
+    var hours = '';
+    $(this).find('td.location span.store_link.hours span.content span.middle').each(function (index) {
+      hours = $(this).text().trim().split('STORE HOURS ')[1];
+    });
+    var storeName = $(this).find('td.location span.storeName strong').text();
+    var address = {
+      name: storeName.substring(0, storeName.length -1),
+      address: addrObj[0],
+      address2: null,
+      city: addrObj[1],
+      state: addrObj[2].split(' ')[0],
+      zipcode: addrObj[2].split(' ')[1],
+      country: "US",
+      phone: $(this).find('td.location span.storePhone strong').text(),
+      hours: hours,
+      gmtOffset: null,
+      inStoreAvailability:  availability,
+      inStoreAvailabilityUpdateDate: null,
+      miles: $(this).find('td.location span.storeDistance strong').text().split(' miles')[0],
+    }
+    addresses.push(address);
+  });
+  return callback(null, {stores: addresses, item: null});
+}
+
+function _parseTargetBody(storeBody, itemBody, callback) {
+  var newStores = [];
+  for (var i = 0; i < storeBody.products[0].stores.length; i++) {
+    var store = storeBody.products[0].stores[i];
+    var addrObj = store.formatted_store_address.split(', ');
+    var newStore = {
+      name: store.store_name,
+      address: addrObj[0],
+      address2: null,
+      city: addrObj[1],
+      state: addrObj[2].split(' ')[0],
+      zipcode: addrObj[2].split(' ')[1],
+      country: "US",
+      phone: store.store_main_phone,
+      hours: null,
+      gmtOffset: null,
+      inStoreAvailability: store.onhand_quantity > 0 ? true : false,
+      inStoreAvailabilityUpdateDate: null,
+      miles: store.distance,
+    };
+    newStores.push(newStore);
+  }
+  var item = itemBody['CatalogEntryView'][0];
+  var newItem = {
+    id: item['DPCI'],
+    name: item['title'],
+    upc: item['UPC'],
+    image: item['Images'][0]['PrimaryImage'][0]['image'],
+    shipToStore: true,
+    freeToShipToStore: true,
+    availableOnline: item['inventoryStatus'] === 'in stock' ? true: false,
+    productUrl: item['dynamicKitURL'],
+    addToCartUrl: null,
+    mobileUrl: null
+  };
+  return callback(null, {stores: newStores, item: newItem});
+}
+
+function _parseAmazonBody(body, callback) {
+  if(!body['ItemLookupResponse']['Items']['Request']['IsValid']) {
+    return callback(null, {item: null, stores: null});
+  }
+  var item = body['ItemLookupResponse']['Items']['Item'];
+  var newItem = {
+    id: item['ASIN'],
+    name: item['ItemAttributes']['Title'],
+    upc: item['ItemAttributes']['UPC'],
+    image: item['LargeImage']['URL'],
+    shipToStore: null,
+    freeToShipToStore: null,
+    availableOnline: item['Offers']['TotalOffers'] > 0 ? true : false,
+    productUrl: item['DetailPageURL'],
+    addToCartUrl: null,
+    mobileUrl: null
+  };
+  var stores = [{
+    name: 'Amazon.com',
+    address: null,
+    address2: null,
+    city: null,
+    state: null,
+    zipcode: null,
+    country: null,
+    phone: null,
+    hours: null,
+    gmtOffset: null,
+    inStoreAvailability: item['Offers']['TotalOffers'] > 0 ? true : false,
+    inStoreAvailabilityUpdateDate: null,
+    miles: null
+  }];
+  return callback(null, {item: newItem, stores: stores});
 }
 
 // https://api.walmartlabs.com/v1/items?ids=41488612,41488614,41488611,41488613,40571997,41488608,41488610,41488609,40571996&apiKey=<MY API KEY>
@@ -96,10 +247,11 @@ exports.walmart = function (amiibo, callback) {
     if(error) {
       return callback(error);
     }
-    body = JSON.parse(body);
     if(resp.statusCode !== 200) {
-      return callback(body);
+      console.log(body);
+      return callback(null, {item: null, stores: null});
     }
+    body = JSON.parse(body);
     _parseWalmartBody(body, function (error, resp) {
       if(error) {
         return callback(error);
@@ -127,10 +279,11 @@ exports.bestbuy = function (amiibo, zip, radius, callback) {
     if(error) {
       return callback(error);
     }
-    body = JSON.parse(body);
     if(resp.statusCode !== 200) {
-      return callback(body);
+      console.log(body);
+      return callback(null, {item: null, stores: null});
     }
+    body = JSON.parse(body);
     if(body.totalPages > 1) {
       // TODO Get the other pages from the Bestbuy API request
     }
@@ -146,6 +299,9 @@ exports.bestbuy = function (amiibo, zip, radius, callback) {
 exports.gamestop = function (amiibo, zip, callback) {
   var baseUrl = 'http://www.gamestop.com/browse/storesearch.aspx';
   var id = amiibo.sku;
+  if(id === null) {
+    return callback(null, {});
+  }
   var parameters = qs.stringify({
     sku: id
   });
@@ -171,9 +327,165 @@ exports.gamestop = function (amiibo, zip, callback) {
       return callback(error);
     }
     if(resp.statusCode !== 200) {
-      return callback(body);
+      console.log(body);
+      return callback(null, {item: null, stores: null});
     }
     _parseGamestopBody(body, function (error, resp) {
+      if(error) {
+        return callback(error);
+      }
+      return callback(null, resp);
+    });
+  });
+};
+
+exports.toysrus = function (amiibo, zip, radius, callback) {
+  var baseUrl = 'http://www.toysrus.com/storefrontsearch/stores.jsp';
+  var productId = amiibo.productId;
+  var id = amiibo.skuId;
+  if(id === null) {
+    return callback(null, {});
+  }
+  var URL = baseUrl;
+  request.post(URL, {
+    headers: {
+      'Cookie': 'hl_p=2981b471-9956-40ee-8cff-cde478fbc8c3; StackLocation=slc2prd; __g_u=129508311129368_1_0.5_1_5_1419820466659_0; mbox=check#true#1419388526|session#1419388465955-873476#1419390326|PC#1419388465955-873476.19_23#1420598067; ClrCSTO=T; ClrSSID=1419388467197-10401; ClrOSSID=1419388467197-10401; ClrSCD=1419388467197; s_ppv=42; s_cc=true; s_vs=1; s_cpm=%5B%5B\'Direct%2520Load\'%2C\'1419388467249\'%5D%5D; s_nr=1419388467250; s_previousPageName=en_US%3A%20TRU%3A%20Home%20Page; s_sq=%5B%5BB%5D%5D; RES_TRACKINGID=9105980476488391; ResonanceSegment=; RES_SESSIONID=74784011476488391; JSESSIONID=xG5cJhmTkH8xzmQQ45ynyQsSy5DLJlt7Bkh6cbJDTL3c6TyC2351!-292345710; browser_id=234714068658; s_vi=[CS]v1|2A4D13198519343C-4000060560000111[CE]; utag_main=v_id:014a7a2539a3000932e387b3ed4b0807800380700093c$_sn:1$_ss:1$_pn:1%3Bexp-session$_st:1419390267619$ses_id:1419388467619%3Bexp-session; __g_c=c%3A129508311129368%7Cd%3A1%7Ca%3A1%7Cb%3A2%7Ce%3A0.5%7Cf%3A1%7Ch%3A0%7Cr%3A%7Cg%3A1; pUserId=140ce986-27f7-4e79-91c3-7805b70fbe83; fsr.s={"v2":-2,"v1":1,"rid":"de358f9-93468937-a714-1f16-19bd2","to":3,"c":"http://www.toysrus.com/shop/index.jsp","pv":1,"lc":{"d3":{"v":1,"s":false}},"cd":3}; __utmt=1; __utma=136881205.1534508923.1419388469.1419388469.1419388469.1; __utmb=136881205.1.10.1419388469; __utmc=136881205; __utmz=136881205.1419388469.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); PrefID=143-1150870479',
+      'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
+      'X-Prototype-Version': '1.6.0',
+      'X-Requested-With': 'XMLHttpRequest'
+    },
+    form: {
+      skuId: id,
+      quantity: 1,
+      postalCode: zip,
+      latitude: '33.4986286',
+      longitude: '-111.9224398',
+      productId: productId,
+      startIndexForPagination: 0,
+      searchRadius: radius,
+      pageType: 'product',
+      ispu_or_sts: 'null',
+      _: 'Response Headersview source'
+    }
+  }, function (error, resp, body) {
+    if(error) {
+      return callback(error);
+    }
+    if(resp.statusCode !== 200) {
+      console.log(body);
+      return callback(null, {item: null, stores: null});
+    }
+    _parseToysRUs(body, function (error, resp) {
+      if(error) {
+        return callback(error);
+      }
+      return callback(null, resp);
+    });
+  });
+};
+
+exports.target = function (amiibo, zip, radius, callback) {
+  var baseUrl = 'http://api.target.com/products/v3/saleable_quantity_by_location';
+  var id = amiibo.dpci;
+  if(id === null) {
+    return callback(null, {});
+  }
+  var parameters = qs.stringify({
+    key: config.target.apiKey
+  });
+  var URL = baseUrl + '?' + parameters;
+  request.post(URL, {
+    json: {
+      products:[{
+        product_id: id,
+        desired_quantity: 1
+      }],
+      nearby: zip,
+      radius: radius,
+      multichannel_options: [{
+        multichannel_option: "none"
+      }]
+    }
+  }, function (error, resp, storeBody) {
+    if(error) {
+      return callback(error);
+    }
+    if(resp.statusCode !== 200) {
+      console.log(storeBody);
+      return callback(null, {});
+    }
+    var baseUrl = 'http://tws.target.com/productservice/services/item_service/v1/by_itemid';
+    var id = amiibo.dpci;
+    var parameters = qs.stringify({
+      id: id,
+      idType: 'DPCI',
+      alt: 'json'
+    });
+    var URL = baseUrl + '?' + parameters;
+    request.get(URL, {
+      headers: {
+        'Accept': 'application/json',
+        'Cookie': 'twsakalb=pky',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'
+      }
+    }, function (error, resp, itemBody) {
+      if(error) {
+        return callback(error);
+      }
+      if(resp.statusCode !== 200) {
+        console.log(itemBody);
+        return callback(null, {item: null, stores: null});
+      }
+      itemBody = JSON.parse(itemBody);
+      _parseTargetBody(storeBody, itemBody, function (error, resp) {
+        if(error) {
+          return callback(error);
+        }
+        return callback(null, resp);
+      });
+    });
+  });
+};
+
+// https://webservices.amazon.com/onca/xml?Service=AWSECommerceService&Operation=ItemLookup&ItemId=<ASIN>&MerchantId=Amazon&ResponseGroup=Large&AssociateTag=foobar
+exports.amazon = function (amiibo, zip, radius, callback) {
+  var urlObject = url.parse('https://webservices.amazon.com');
+  var baseUrl = urlObject.href;
+  var id = amiibo.asin;
+  if(id === null) {
+    return callback(null, {});
+  }
+  var path = '/onca/xml';
+  var parameters = qs.stringify({
+    Service: 'AWSECommerceService',
+    Operation: 'ItemLookup',
+    ItemId: id,
+    MerchantId: 'Amazon',
+    ResponseGroup: 'Large',
+    AssociateTag: 'sp34hi34mafaf-20'
+  });
+  var options = {
+    host: urlObject.host,
+    path: path + '?' + parameters
+  };
+  aws2.sign(options, {
+    accessKeyId: config.amazon.accessKeyId,
+    secretAccessKey: config.amazon.secretAccessKey
+  });
+  request.get(baseUrl + options.path, {
+    headers: {
+      'Accept': 'application/xml'
+    }
+  }, function (error, resp, body) {
+    if(error) {
+      return callback(error);
+    }
+    body = parser.toJson(body);
+    body = JSON.parse(body);
+    if(resp.statusCode !== 200) {
+      return callback(body);
+    }
+    _parseAmazonBody(body, function (error, resp) {
       if(error) {
         return callback(error);
       }

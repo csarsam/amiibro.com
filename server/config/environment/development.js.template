@@ -4,12 +4,24 @@
 // ==================================
 module.exports = {
   session: {
-    secret: 'lkdjlfksjflksjdlfkjsdljfsljsldjflsdkjflskdjlfksjdflskjlskdjflj'
+    secret: '' // 64+ char phrase
+  },
+  redis: {
+    host: '127.0.0.1',
+    port: 6379,
+    password: '' // Redis password, null for no password
   },
   walmart: {
-    apiKey: ''
+    apiKey: '' // https://developer.walmartlabs.com/
   },
   bestbuy: {
-    apiKey: ''
+    apiKey: '' // https://developer.bestbuy.com/
+  },
+  target: {
+    apiKey: 'eb2551e4accc14f38cc42d32fbc2b2ea' // Retail site key
+  },
+  amazon: {
+    accessKeyId : '', // http://aws.amazon.com/
+    secretAccessKey: ''
   }
 };
