@@ -1,0 +1,104 @@
+
+$tan: #d7dacc;
+$lightblue: #8fccc2;
+$darkblue: #244d49;
+$red: #e6262e;
+
+/**
+ *Font Awesome Fonts
+ */
+
+@font-face
+{
+    font-family: 'FontAwesome';
+    font-weight: normal;
+    font-style: normal;
+
+    src: url('../bower_components/font-awesome/fonts/fontawesome-webfont.eot?v=4.1.0');
+    src: url('../bower_components/font-awesome/fonts/fontawesome-webfont.eot?#iefix&v=4.1.0') format('embedded-opentype'),
+    url('../bower_components/font-awesome/fonts/fontawesome-webfont.woff?v=4.1.0') format('woff'),
+    url('../bower_components/font-awesome/fonts/fontawesome-webfont.ttf?v=4.1.0') format('truetype'),
+    url('../bower_components/font-awesome/fonts/fontawesome-webfont.svg?v=4.1.0#fontawesomeregular') format('svg');
+}
+
+/**
+ * App-wide Styles
+ */
+
+.browsehappy
+{
+    margin: .2em 0;
+    padding: .2em 0;
+
+    color: #000;
+    background: #ccc;
+}
+
+.logo
+{
+    font-family: sans-serif;
+    font-size: 40px;
+
+    text-align: center;
+
+    color: $red;
+}
+
+body
+{
+    background-color: $tan;
+}
+
+input
+{
+    border: none;
+    background-color: #eee;
+    font-size: 30px;
+    text-align: center;
+}
+
+#banner {
+    margin-bottom: 0px;
+}
+.grid
+{
+    padding: 0;
+
+    list-style-type: none;
+}
+
+.grid-item
+{
+    position: relative;
+
+    float: left;
+    overflow: hidden;
+
+    width: 23%;
+    margin: 1%;
+    padding-bottom: 23%; /* = width for a 1:1 aspect ratio */
+
+    text-decoration: none;
+
+    background-color: $lightblue;
+    .content
+    {
+        position: absolute;
+
+        width: 90%; /* = 100% - 2*5% padding */
+        height: 80%; /* = 100% - 2*10% padding */
+        margin: 10% 5%;
+
+        background-color: white;
+    }
+}
+
+.amiibo .content div
+{
+    width: 100%;
+    height: 100%;
+
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 80%;
+}
